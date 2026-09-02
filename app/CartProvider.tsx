@@ -1,0 +1,179 @@
+"use client";
+
+import Link from "next/link";
+import { Minus, Plus, Shirt, Trash2, X } from "lucide-react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { formatPrice, merchProducts, type MerchProduct } from "./merch/products";
+
+type CartLine = {
+  key: string;
+  productId: string;
+  size?: string;
+  quantity: number;
+};
+
+type CartContextValue = {
+  count: number;
+  addItem: (product: MerchProduct, size?: string) => void;
+  openCart: () => void;
+};
+
+const storageKey = "camp-firewalker-merch-basket";
+const CartContext = createContext<CartContextValue | null>(null);
+
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [lines, setLines] = useState<CartLine[]>([]);
+  const [open, setOpen] = useState(false);
+  const closeButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      try {
+        const saved = window.localStorage.getItem(storageKey);
+        if (saved) setLines(JSON.parse(saved) as CartLine[]);
+      } catch {
+        window.localStorage.removeItem(storageKey);
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem(storageKey, JSON.stringify(lines));
+  }, [lines]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.body.classList.add("cart-open");
+    document.addEventListener("keydown", onKeyDown);
+    closeButton.current?.focus();
+    return () => {
+      document.body.classList.remove("cart-open");
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  const detailedLines = useMemo(
+    () => lines.flatMap((line) => {
+      const product = merchProducts.find((item) => item.id === line.productId);
+      return product ? [{ ...line, product }] : [];
+    }),
+    [lines],
+  );
+
+  const count = lines.reduce((total, line) => total + line.quantity, 0);
+  const subtotal = detailedLines.reduce(
+    (total, line) => total + line.product.price * line.quantity,
+    0,
+  );
+
+  const addItem = (product: MerchProduct, size?: string) => {
+    const key = `${product.id}:${size ?? "standard"}`;
+    setLines((current) => {
+      const existing = current.find((line) => line.key === key);
+      if (existing) {
+        return current.map((line) =>
+          line.key === key ? { ...line, quantity: line.quantity + 1 } : line,
+        );
+      }
+      return [...current, { key, productId: product.id, size, quantity: 1 }];
+    });
+    setOpen(true);
+  };
+
+  const changeQuantity = (key: string, change: number) => {
+    setLines((current) => current.flatMap((line) => {
+      if (line.key !== key) return [line];
+      const quantity = line.quantity + change;
+      return quantity > 0 ? [{ ...line, quantity }] : [];
+    }));
+  };
+
+  const checkoutBody = detailedLines
+    .map((line) => `${line.quantity} × ${line.product.name}${line.size ? ` (${line.size})` : ""} — ${formatPrice(line.product.price * line.quantity)}`)
+    .join("\n");
+  const checkoutHref = `mailto:firewalkertx@gmail.com?subject=${encodeURIComponent("Camp Firewalker merch order request")}&body=${encodeURIComponent(`I'd like to request the following Camp Firewalker merchandise:\n\n${checkoutBody}\n\nEstimated merchandise total: ${formatPrice(subtotal)}\n\nName:\nPreferred contact method:\nPickup or shipping preference:`)}`;
+
+  return (
+    <CartContext.Provider value={{ count, addItem, openCart: () => setOpen(true) }}>
+      {children}
+      {open && (
+        <aside className="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+          <button className="cart-backdrop" type="button" aria-label="Close merch basket" onClick={() => setOpen(false)} />
+          <div className="cart-panel">
+            <div className="cart-head">
+              <div>
+                <span>Merch basket</span>
+                <h2 id="cart-title">Your field kit</h2>
+              </div>
+              <button ref={closeButton} className="icon-button" type="button" aria-label="Close merch basket" onClick={() => setOpen(false)}>
+                <X aria-hidden="true" />
+              </button>
+            </div>
+
+            {detailedLines.length === 0 ? (
+              <div className="cart-empty">
+                <Shirt aria-hidden="true" />
+                <h3>Your basket is ready for the trail.</h3>
+                <p>Add a piece of Camp Firewalker gear and help carry the mission into the community.</p>
+                <Link className="button primary" href="/merch" onClick={() => setOpen(false)}>Explore merch</Link>
+              </div>
+            ) : (
+              <>
+                <div className="cart-lines">
+                  {detailedLines.map((line) => (
+                    <article className="cart-line" key={line.key}>
+                      <img src={line.product.image} alt="" />
+                      <div>
+                        <h3>{line.product.name}</h3>
+                        <p>{line.size ? `Size ${line.size}` : line.product.category}</p>
+                        <strong>{formatPrice(line.product.price)}</strong>
+                        <div className="cart-line-actions">
+                          <div className="quantity-control" aria-label={`Quantity for ${line.product.name}`}>
+                            <button type="button" aria-label={`Remove one ${line.product.name}`} onClick={() => changeQuantity(line.key, -1)}><Minus aria-hidden="true" /></button>
+                            <span>{line.quantity}</span>
+                            <button type="button" aria-label={`Add one ${line.product.name}`} onClick={() => changeQuantity(line.key, 1)}><Plus aria-hidden="true" /></button>
+                          </div>
+                          <button className="remove-line" type="button" aria-label={`Remove ${line.product.name} from basket`} onClick={() => setLines((current) => current.filter((item) => item.key !== line.key))}>
+                            <Trash2 aria-hidden="true" />
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+                <div className="cart-summary">
+                  <div><span>Estimated total</span><strong>{formatPrice(subtotal)}</strong></div>
+                  <p>Submitting sends an order request. Camp Firewalker will confirm availability, payment, and delivery details directly.</p>
+                  <a className="button primary" href={checkoutHref}>Request this order</a>
+                  <button className="cart-continue" type="button" onClick={() => setOpen(false)}>Continue shopping</button>
+                </div>
+              </>
+            )}
+          </div>
+        </aside>
+      )}
+    </CartContext.Provider>
+  );
+}
+
+export function MerchBasketButton() {
+  const cart = useContext(CartContext);
+  if (!cart) return null;
+  return (
+    <button className="merch-basket-button" type="button" onClick={cart.openCart} aria-label={`Open merch basket with ${cart.count} ${cart.count === 1 ? "item" : "items"}`}>
+      <Shirt aria-hidden="true" />
+      <span>Merch</span>
+      {cart.count > 0 && <strong>{cart.count}</strong>}
+    </button>
+  );
+}
+
+export function useCart() {
+  const cart = useContext(CartContext);
+  if (!cart) throw new Error("useCart must be used inside CartProvider");
+  return cart;
+}
