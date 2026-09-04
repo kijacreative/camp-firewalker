@@ -43,7 +43,7 @@ export default function PathChooser({ homePrefix = "" }: { homePrefix?: string }
               </button>
             </div>
             <div className="path-choice-options">
-              <a href={`${homePrefix}#volunteer`} onClick={() => setOpen(false)}>
+              <a href="/volunteer" onClick={() => setOpen(false)}>
                 <span>01 / Volunteer</span>
                 <strong>Bring your time</strong>
                 <p>You do not have to be an expert. You have to show up.</p>
@@ -56,8 +56,8 @@ export default function PathChooser({ homePrefix = "" }: { homePrefix?: string }
                 <i aria-hidden="true">&#8594;</i>
               </a>
             </div>
-            <a className="path-choice-donate" href="https://www.campfirewalker.org/donate">
-              Already know you want to give? Donate now <span aria-hidden="true">&#8599;</span>
+            <a className="path-choice-donate" href="/donate" onClick={() => setOpen(false)}>
+              Already know you want to give? Donate now <span aria-hidden="true">&#8594;</span>
             </a>
           </div>
         </div>

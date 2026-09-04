@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { ExternalLink, Plus } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "../CartProvider";
 import { formatPrice, merchProducts } from "./products";
@@ -26,6 +26,14 @@ export default function MerchStore() {
               <strong>{formatPrice(product.price)}</strong>
             </div>
             <p className="merch-product-description">{product.description}</p>
+            <div className="merch-source">
+              <span>Production source selected</span>
+              <a href={product.source.url} target="_blank" rel="noreferrer">
+                {product.source.maker} {product.source.model}
+                <ExternalLink aria-hidden="true" />
+              </a>
+              <p>{product.source.color} / {product.source.decoration}</p>
+            </div>
             <div className="merch-product-actions">
               {product.sizes ? (
                 <label>

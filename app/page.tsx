@@ -1,12 +1,14 @@
 import Link from "next/link";
 import ExperienceStories from "./ExperienceStories";
 import PathChooser from "./PathChooser";
+import FloatingNav from "./FloatingNav";
 import { MerchBasketButton } from "./CartProvider";
+import BrandMarkExperience from "./BrandMarkExperience";
 
 const adventures = [
   "Camping weekends",
   "Trail days",
-  "Lake adventures",
+  "Fishing and creek days",
   "Outdoor skill-building",
 ];
 
@@ -53,7 +55,7 @@ const involvementPaths = [
 export default function Home() {
   return (
     <main className="site-shell">
-      <nav className="nav" aria-label="Main navigation">
+      <FloatingNav>
         <a className="brand" href="#top" aria-label="Camp Firewalker home">
           <img src="/brand/logo-mono-light.png" alt="" />
         </a>
@@ -61,16 +63,16 @@ export default function Home() {
           <a href="#experience">Experiences</a>
           <Link href="/gallery">Gallery</Link>
           <Link href="/merch">Merch</Link>
-          <a href="#volunteer">Volunteer</a>
+          <Link href="/volunteer">Volunteer</Link>
           <a href="#sponsor">Sponsor</a>
-          <a href="https://www.campfirewalker.org/donate">Donate</a>
+          <Link href="/donate">Give</Link>
           <Link className="brand-tab" href="/brand">Brand Guidelines</Link>
         </div>
         <div className="nav-actions">
-          <MerchBasketButton />
           <PathChooser />
+          <MerchBasketButton />
         </div>
-      </nav>
+      </FloatingNav>
 
       <section className="hero" id="top">
         <div className="hero-copy">
@@ -107,6 +109,8 @@ export default function Home() {
           Camp Firewalker is a volunteer-driven, donor-supported nonprofit creating outdoor adventures for young people who may not otherwise have access to them. Each outing uses new experiences to build teamwork, confidence, self-reliance, and positive relationships.
         </p>
       </section>
+
+      <BrandMarkExperience />
 
       <section className="involvement-rail" id="choose-your-path" aria-labelledby="get-involved-title">
         <div className="involvement-intro">
@@ -215,9 +219,9 @@ export default function Home() {
                 <li key={step}>{step}</li>
               ))}
             </ol>
-            <a className="button primary" href="https://www.campfirewalker.org/new-page-1">
+            <Link className="button primary" href="/volunteer">
               Apply to volunteer
-            </a>
+            </Link>
           </article>
           <article className="card sponsor-card" id="sponsor">
             <p className="card-kicker">Sponsor</p>
@@ -234,9 +238,9 @@ export default function Home() {
               ))}
             </div>
             <p className="support-note">Equipment, meals, venues, professional services, and other useful resources can also move an adventure forward.</p>
-            <a className="button primary" href="https://www.campfirewalker.org/donate">
+            <Link className="button primary" href="/donate">
               Donate or give in kind
-            </a>
+            </Link>
           </article>
         </div>
       </section>
@@ -274,7 +278,7 @@ export default function Home() {
             Camp Firewalker adventures are shaped by the landscape we call home: lakes, creeks, trails, campfires, and long days outside together.
           </p>
         </div>
-        <img src="/brand/archive/campfire-dsc.jpg" alt="A young Camp Firewalker participant fishing beside a Texas pond" />
+        <img src="/brand/campout/creek-friends.jpg" alt="Camp Firewalker participants exploring a Texas creek together" />
       </section>
 
       <section className="final-cta">

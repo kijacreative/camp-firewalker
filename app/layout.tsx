@@ -36,8 +36,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body><CartProvider>{children}</CartProvider></body>
+    <html lang="en" data-scroll-behavior="smooth">
+      <body>
+        <CartProvider>
+          {children}
+          <p className="site-memorial">In memory of Mark Wood and Matt Van Eaton</p>
+        </CartProvider>
+      </body>
     </html>
   );
 }

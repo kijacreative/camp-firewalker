@@ -26,7 +26,7 @@ export default function GalleryWall() {
       <div className="gallery-wall">
         {galleryMoments.map((moment, index) => (
           <button type="button" className="gallery-tile" onClick={() => setOpen(index)} key={moment.image} aria-label={`Open photo: ${moment.title}`}>
-            <img src={moment.image} alt={moment.alt} />
+            <img src={moment.image} alt={moment.alt} loading={index < 2 ? "eager" : "lazy"} />
             <span className="gallery-tile-copy">
               <small>{String(index + 1).padStart(2, "0")} / {moment.label}</small>
               <strong>{moment.title}</strong>

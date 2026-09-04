@@ -56,7 +56,7 @@ export default function ExperienceStories() {
       <div className="journey-track" ref={trackRef} onScroll={updateActive}>
         {moments.map((moment, index) => (
           <button className="journey-slide" type="button" onClick={() => setOpen(index)} key={moment.image} aria-label={`Open photo: ${moment.title}`}>
-            <img src={moment.image} alt={moment.alt} />
+            <img src={moment.image} alt={moment.alt} loading="lazy" />
             <span className="journey-number">{String(index + 1).padStart(2, "0")}</span>
             <span className="journey-caption"><small>{moment.label}</small><strong>{moment.title}</strong><span>{moment.text}</span></span>
           </button>

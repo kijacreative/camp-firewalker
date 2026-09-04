@@ -24,23 +24,36 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [open, setOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  const [checkoutState, setCheckoutState] = useState<"idle" | "loading" | "error">("idle");
+  const [checkoutMessage, setCheckoutMessage] = useState("");
+  const [purchaseComplete, setPurchaseComplete] = useState(false);
   const closeButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
       try {
-        const saved = window.localStorage.getItem(storageKey);
-        if (saved) setLines(JSON.parse(saved) as CartLine[]);
+        const checkoutComplete = new URLSearchParams(window.location.search).get("checkout") === "success";
+        if (checkoutComplete) {
+          window.localStorage.removeItem(storageKey);
+          setPurchaseComplete(true);
+        } else {
+          const saved = window.localStorage.getItem(storageKey);
+          if (saved) setLines(JSON.parse(saved) as CartLine[]);
+        }
       } catch {
         window.localStorage.removeItem(storageKey);
+      } finally {
+        setHydrated(true);
       }
     }, 0);
     return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
     window.localStorage.setItem(storageKey, JSON.stringify(lines));
-  }, [lines]);
+  }, [hydrated, lines]);
 
   useEffect(() => {
     if (!open) return;
@@ -93,13 +106,37 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const checkoutBody = detailedLines
-    .map((line) => `${line.quantity} × ${line.product.name}${line.size ? ` (${line.size})` : ""} — ${formatPrice(line.product.price * line.quantity)}`)
+    .map((line) => `${line.quantity} × ${line.product.name}${line.size ? ` (${line.size})` : ""} — ${formatPrice(line.product.price * line.quantity)}\n   Source: ${line.product.source.maker} ${line.product.source.model}, ${line.product.source.color}\n   Decoration: ${line.product.source.decoration}`)
     .join("\n");
   const checkoutHref = `mailto:firewalkertx@gmail.com?subject=${encodeURIComponent("Camp Firewalker merch order request")}&body=${encodeURIComponent(`I'd like to request the following Camp Firewalker merchandise:\n\n${checkoutBody}\n\nEstimated merchandise total: ${formatPrice(subtotal)}\n\nName:\nPreferred contact method:\nPickup or shipping preference:`)}`;
+
+  async function beginCheckout() {
+    setCheckoutState("loading");
+    setCheckoutMessage("");
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: lines.map(({ productId, size, quantity }) => ({ productId, size, quantity })) }),
+      });
+      const result = await response.json() as { url?: string; error?: string };
+      if (!response.ok || !result.url) throw new Error(result.error || "Checkout could not be started.");
+      window.location.assign(result.url);
+    } catch (error) {
+      setCheckoutMessage(error instanceof Error ? error.message : "Checkout could not be started.");
+      setCheckoutState("error");
+    }
+  }
 
   return (
     <CartContext.Provider value={{ count, addItem, openCart: () => setOpen(true) }}>
       {children}
+      {purchaseComplete && (
+        <div className="checkout-toast" role="status">
+          <strong>Thank you. Your order is confirmed.</strong>
+          <button type="button" onClick={() => setPurchaseComplete(false)} aria-label="Dismiss confirmation"><X aria-hidden="true" /></button>
+        </div>
+      )}
       {open && (
         <aside className="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title">
           <button className="cart-backdrop" type="button" aria-label="Close merch basket" onClick={() => setOpen(false)} />
@@ -147,8 +184,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 </div>
                 <div className="cart-summary">
                   <div><span>Estimated total</span><strong>{formatPrice(subtotal)}</strong></div>
-                  <p>Submitting sends an order request. Camp Firewalker will confirm availability, payment, and delivery details directly.</p>
-                  <a className="button primary" href={checkoutHref}>Request this order</a>
+                  <p>Secure checkout is processed by Stripe. Shipping details are collected before payment.</p>
+                  <button className="button primary cart-checkout" type="button" onClick={beginCheckout} disabled={checkoutState === "loading"}>
+                    {checkoutState === "loading" ? "Opening secure checkout..." : "Secure checkout"}
+                  </button>
+                  {checkoutState === "error" && <p className="checkout-error" role="alert">{checkoutMessage}</p>}
+                  <a className="cart-request" href={checkoutHref}>Request order by email</a>
                   <button className="cart-continue" type="button" onClick={() => setOpen(false)}>Continue shopping</button>
                 </div>
               </>

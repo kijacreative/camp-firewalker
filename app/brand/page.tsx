@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MerchBasketButton } from "../CartProvider";
+import FloatingNav from "../FloatingNav";
 
 const colors = [
   { name: "Campfire Orange", hex: "#C1561D", className: "swatch-orange" },
@@ -20,7 +21,7 @@ const voiceTraits = [
 export default function BrandGuidelines() {
   return (
     <main className="guidelines">
-      <nav className="nav" aria-label="Brand guidelines navigation">
+      <FloatingNav label="Brand guidelines navigation">
         <Link className="brand" href="/" aria-label="Camp Firewalker website">
           <img src="/brand/logo-mono-light.png" alt="" />
         </Link>
@@ -31,10 +32,10 @@ export default function BrandGuidelines() {
           <a href="#voice">Voice</a>
         </div>
         <div className="nav-actions">
-          <MerchBasketButton />
           <Link className="nav-cta" href="/">View website</Link>
+          <MerchBasketButton />
         </div>
-      </nav>
+      </FloatingNav>
 
       <header className="guide-hero">
         <div>
@@ -143,7 +144,7 @@ export default function BrandGuidelines() {
       </section>
 
       <section className="guide-photo">
-        <img src="/brand/archive/campfire-dsc.jpg" alt="A young Camp Firewalker participant fishing beside a Texas pond" />
+        <img src="/brand/campout/creek-crossing.jpg" alt="Camp Firewalker participants navigating a rocky creek during a campout" />
         <div>
           <p className="eyebrow">04 / Photography</p>
           <h2>Show Texas as it is.</h2>
