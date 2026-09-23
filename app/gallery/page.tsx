@@ -1,7 +1,6 @@
 import Link from "next/link";
-import PathChooser from "../PathChooser";
+import FloatingActions from "../FloatingActions";
 import GalleryWall from "./GalleryWall";
-import { MerchBasketButton } from "../CartProvider";
 import GalleryArchive from "./GalleryArchive";
 import FloatingNav from "../FloatingNav";
 
@@ -14,15 +13,9 @@ export default function GalleryPage() {
           <Link href="/">Home</Link>
           <Link className="active-tab" href="/gallery">Gallery</Link>
           <Link href="/merch">Merch</Link>
-          <Link href="/volunteer">Volunteer</Link>
-          <Link href="/#sponsor">Sponsor</Link>
-          <Link href="/donate">Give</Link>
           <Link className="brand-tab" href="/brand">Brand Guidelines</Link>
         </div>
-        <div className="nav-actions">
-          <PathChooser homePrefix="/" />
-          <MerchBasketButton />
-        </div>
+        <FloatingActions />
       </FloatingNav>
 
       <header className="gallery-hero">
@@ -39,8 +32,8 @@ export default function GalleryPage() {
         <p className="eyebrow">Help create the next story</p>
         <h2>Every photograph begins with someone saying yes.</h2>
         <div className="hero-actions">
-          <Link className="button primary" href="/volunteer">Volunteer</Link>
-          <Link className="button secondary light" href="/#sponsor">Sponsor an adventure</Link>
+          <Link className="button primary" href="/volunteer#volunteer-interest">Volunteer</Link>
+          <Link className="button secondary light" href="/donate#donate-interest">Give or sponsor</Link>
         </div>
       </section>
     </main>

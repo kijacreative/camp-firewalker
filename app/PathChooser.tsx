@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export default function PathChooser({ homePrefix = "" }: { homePrefix?: string }) {
+export default function PathChooser({ homePrefix = "/" }: { homePrefix?: string }) {
   const [open, setOpen] = useState(false);
   const closeButton = useRef<HTMLButtonElement>(null);
 
@@ -43,21 +43,21 @@ export default function PathChooser({ homePrefix = "" }: { homePrefix?: string }
               </button>
             </div>
             <div className="path-choice-options">
-              <a href="/volunteer" onClick={() => setOpen(false)}>
+              <a href={`${homePrefix}volunteer#volunteer-interest`} onClick={() => setOpen(false)}>
                 <span>01 / Volunteer</span>
                 <strong>Bring your time</strong>
-                <p>You do not have to be an expert. You have to show up.</p>
+                <p>Go straight to the volunteer interest form.</p>
                 <i aria-hidden="true">&#8594;</i>
               </a>
-              <a href={`${homePrefix}#sponsor`} onClick={() => setOpen(false)}>
-                <span>02 / Sponsor</span>
+              <a href={`${homePrefix}donate#donate-interest`} onClick={() => setOpen(false)}>
+                <span>02 / Give</span>
                 <strong>Put resources behind the day</strong>
-                <p>Fund an outing, underwrite a season, or contribute in kind.</p>
+                <p>Start a contribution, sponsorship, or in-kind support conversation.</p>
                 <i aria-hidden="true">&#8594;</i>
               </a>
             </div>
-            <a className="path-choice-donate" href="/donate" onClick={() => setOpen(false)}>
-              Already know you want to give? Donate now <span aria-hidden="true">&#8594;</span>
+            <a className="path-choice-donate" href={`${homePrefix}donate#donate-interest`} onClick={() => setOpen(false)}>
+              Already know you want to give? Go to the form <span aria-hidden="true">&#8594;</span>
             </a>
           </div>
         </div>

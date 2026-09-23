@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MerchBasketButton } from "../CartProvider";
+import FloatingActions from "../FloatingActions";
 import InterestForm from "../InterestForm";
-import PathChooser from "../PathChooser";
 import FloatingNav from "../FloatingNav";
 
 export const metadata: Metadata = {
@@ -19,11 +18,9 @@ export default function VolunteerPage() {
           <Link href="/">Home</Link>
           <Link href="/gallery">Gallery</Link>
           <Link href="/merch">Merch</Link>
-          <Link className="active-tab" href="/volunteer">Volunteer</Link>
-          <Link href="/donate">Give</Link>
           <Link className="brand-tab" href="/brand">Brand Guidelines</Link>
         </div>
-        <div className="nav-actions"><PathChooser homePrefix="/" /><MerchBasketButton /></div>
+        <FloatingActions />
       </FloatingNav>
 
       <header className="action-hero volunteer-action-hero">
@@ -45,7 +42,7 @@ export default function VolunteerPage() {
           </ol>
           <p className="partnership-boundary"><strong>A clear partnership:</strong> Forerunner provides the young people and their ongoing mentorship. Camp Firewalker coordinates the outdoor experience and its volunteer team.</p>
         </div>
-        <div className="action-form-wrap">
+        <div className="action-form-wrap" id="volunteer-interest">
           <p className="eyebrow">Volunteer interest</p>
           <h2>Start the conversation.</h2>
           <InterestForm mode="volunteer" />

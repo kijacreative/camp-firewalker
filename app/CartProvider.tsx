@@ -205,7 +205,7 @@ export function MerchBasketButton() {
   const cart = useContext(CartContext);
   if (!cart) return null;
   return (
-    <button className="merch-basket-button" type="button" onClick={cart.openCart} aria-label={`Open merch basket with ${cart.count} ${cart.count === 1 ? "item" : "items"}`}>
+    <button className="merch-basket-button" type="button" onClick={cart.openCart} aria-label={`Open merch basket with ${cart.count} ${cart.count === 1 ? "item" : "items"}`} title="Merch">
       <Shirt aria-hidden="true" />
       <span>Merch</span>
       {cart.count > 0 && <strong>{cart.count}</strong>}

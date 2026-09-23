@@ -1,8 +1,7 @@
 import Link from "next/link";
 import ExperienceStories from "./ExperienceStories";
-import PathChooser from "./PathChooser";
 import FloatingNav from "./FloatingNav";
-import { MerchBasketButton } from "./CartProvider";
+import FloatingActions from "./FloatingActions";
 import BrandMarkExperience from "./BrandMarkExperience";
 
 const adventures = [
@@ -12,43 +11,22 @@ const adventures = [
   "Outdoor skill-building",
 ];
 
-const sponsorPaths = [
-  {
-    name: "Sponsor an outing",
-    text: "Put food, gear, transportation, and access behind one memorable day outside.",
-  },
-  {
-    name: "Underwrite a season",
-    text: "Help Camp Firewalker plan a consistent rhythm of experiences across the year.",
-  },
-  {
-    name: "Give in kind",
-    text: "Offer equipment, meals, a venue, transportation, or professional support.",
-  },
-];
-
-const volunteerSteps = [
-  "Tell us your availability and outdoor comfort level.",
-  "Join an experienced lead for your first adventure.",
-  "Help with awareness and fundraising between outings.",
-];
-
 const involvementPaths = [
   {
     number: "01",
     audience: "For volunteers",
     title: "You do not have to be an expert. You have to show up.",
     text: "Tell us when you are available, have a quick conversation with the team, and join an experienced lead on an upcoming outing.",
-    href: "#volunteer",
-    label: "See how to volunteer",
+    href: "/volunteer#volunteer-interest",
+    label: "Start volunteer interest",
   },
   {
     number: "02",
-    audience: "For sponsors",
-    title: "Fund a season. Change a life. See exactly how.",
-    text: "Choose the kind of impact you want to make, connect with the team, and turn your support into real days on Texas lakes and trails.",
-    href: "#sponsor",
-    label: "Explore sponsorship",
+    audience: "For sponsors and donors",
+    title: "Fund a season. Change a life. Start the conversation.",
+    text: "Tell the team what kind of support you are considering so they can connect it to the next real need.",
+    href: "/donate#donate-interest",
+    label: "Start giving interest",
   },
 ];
 
@@ -61,17 +39,12 @@ export default function Home() {
         </a>
         <div className="nav-links">
           <a href="#experience">Experiences</a>
+          <Link href="/story">Story Game</Link>
           <Link href="/gallery">Gallery</Link>
           <Link href="/merch">Merch</Link>
-          <Link href="/volunteer">Volunteer</Link>
-          <a href="#sponsor">Sponsor</a>
-          <Link href="/donate">Give</Link>
           <Link className="brand-tab" href="/brand">Brand Guidelines</Link>
         </div>
-        <div className="nav-actions">
-          <PathChooser />
-          <MerchBasketButton />
-        </div>
+        <FloatingActions />
       </FloatingNav>
 
       <section className="hero" id="top">
@@ -82,16 +55,16 @@ export default function Home() {
             Camp Firewalker creates real outdoor experiences where young people try something new, contribute to a team, and come home knowing they can do hard things.
           </p>
           <div className="hero-front-doors" aria-label="Ways to get involved">
-            <a href="#volunteer">
+            <Link href="/volunteer#volunteer-interest">
               <span>Volunteer</span>
-              <strong>Show up for an adventure.</strong>
+              <strong>Start the volunteer form.</strong>
               <i aria-hidden="true">&#8594;</i>
-            </a>
-            <a href="#sponsor">
+            </Link>
+            <Link href="/donate#donate-interest">
               <span>Sponsor</span>
-              <strong>Make the next one possible.</strong>
+              <strong>Start the giving conversation.</strong>
               <i aria-hidden="true">&#8594;</i>
-            </a>
+            </Link>
           </div>
           <div className="hero-meta" aria-label="Program highlights">
             <div><span>Since</span><strong>2015 in Dallas, Texas</strong></div>
@@ -143,6 +116,20 @@ export default function Home() {
           </div>
         </div>
         <ExperienceStories />
+      </section>
+
+      <section className="story-game-teaser" aria-labelledby="story-teaser-title">
+        <div>
+          <p className="eyebrow">Interactive story</p>
+          <h2 id="story-teaser-title">Play through the first crossing.</h2>
+          <p>
+            Step into a Camp Firewalker outing as a choice-driven story. Every decision shifts courage, trust, and focus before the night fire asks what you are taking home.
+          </p>
+          <Link className="button primary" href="/story">
+            Start the story
+          </Link>
+        </div>
+        <img src="/brand/campout/creek-crossing.jpg" alt="Camp Firewalker participants crossing a creek together" />
       </section>
 
       <section className="day-rhythm" aria-labelledby="day-rhythm-title">
@@ -202,49 +189,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="pathways">
-        <div className="section-head">
-          <p className="eyebrow">Your next step</p>
-          <h2>Turn a good intention into a real day outside.</h2>
-        </div>
-        <div className="cards">
-          <article className="card" id="volunteer">
-            <p className="card-kicker">Volunteer</p>
-            <h3>You do not have to be an expert. You have to show up.</h3>
-            <p>
-              You do not need to be an expert outdoorsman. You need steadiness, humility, and a willingness to serve under trained leadership.
-            </p>
-            <ol>
-              {volunteerSteps.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </ol>
-            <Link className="button primary" href="/volunteer">
-              Apply to volunteer
-            </Link>
-          </article>
-          <article className="card sponsor-card" id="sponsor">
-            <p className="card-kicker">Sponsor</p>
-            <h3>Fund a season. Change a life. See exactly how.</h3>
-            <p>
-              Sponsorship turns directly into the gear, food, travel, access, and planning behind meaningful outdoor experiences.
-            </p>
-            <div className="tiers">
-              {sponsorPaths.map((tier) => (
-                <div className="tier" key={tier.name}>
-                  <strong>{tier.name}</strong>
-                  <p>{tier.text}</p>
-                </div>
-              ))}
-            </div>
-            <p className="support-note">Equipment, meals, venues, professional services, and other useful resources can also move an adventure forward.</p>
-            <Link className="button primary" href="/donate">
-              Donate or give in kind
-            </Link>
-          </article>
-        </div>
-      </section>
-
       <section className="legacy-story" id="story">
         <div>
           <p className="eyebrow">Why Firewalker</p>
@@ -288,12 +232,12 @@ export default function Home() {
           Bring your time to the trail or put your resources behind the next season. Either way, your yes becomes an experience a young man can carry forward.
         </p>
         <div className="hero-actions">
-          <a className="button primary" href="#volunteer">
+          <Link className="button primary" href="/volunteer#volunteer-interest">
             Volunteer
-          </a>
-          <a className="button secondary light" href="#sponsor">
-            Sponsor an adventure
-          </a>
+          </Link>
+          <Link className="button secondary light" href="/donate#donate-interest">
+            Give or sponsor
+          </Link>
         </div>
       </section>
 

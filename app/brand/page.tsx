@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MerchBasketButton } from "../CartProvider";
+import FloatingActions from "../FloatingActions";
 import FloatingNav from "../FloatingNav";
 
 const colors = [
@@ -31,10 +31,7 @@ export default function BrandGuidelines() {
           <a href="#type">Type</a>
           <a href="#voice">Voice</a>
         </div>
-        <div className="nav-actions">
-          <Link className="nav-cta" href="/">View website</Link>
-          <MerchBasketButton />
-        </div>
+        <FloatingActions />
       </FloatingNav>
 
       <header className="guide-hero">

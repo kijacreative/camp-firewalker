@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MerchBasketButton } from "../CartProvider";
+import FloatingActions from "../FloatingActions";
 import InterestForm from "../InterestForm";
-import PathChooser from "../PathChooser";
 import FloatingNav from "../FloatingNav";
 
 export const metadata: Metadata = {
@@ -19,11 +18,9 @@ export default function DonatePage() {
           <Link href="/">Home</Link>
           <Link href="/gallery">Gallery</Link>
           <Link href="/merch">Merch</Link>
-          <Link href="/volunteer">Volunteer</Link>
-          <Link className="active-tab" href="/donate">Give</Link>
           <Link className="brand-tab" href="/brand">Brand Guidelines</Link>
         </div>
-        <div className="nav-actions"><PathChooser homePrefix="/" /><MerchBasketButton /></div>
+        <FloatingActions />
       </FloatingNav>
 
       <header className="action-hero giving-action-hero">
@@ -47,7 +44,7 @@ export default function DonatePage() {
           <p>Camp Firewalker will confirm the most useful next step, answer questions, and provide the appropriate payment or delivery details directly.</p>
           <blockquote>“Our boys ask weekly about the next camping trip.”<footer>Will Dowell, Executive Director<br />Behind Every Door</footer></blockquote>
         </div>
-        <div className="action-form-wrap">
+        <div className="action-form-wrap" id="donate-interest">
           <p className="eyebrow">Contribution interest</p>
           <h2>Tell us how you would like to help.</h2>
           <InterestForm mode="support" />
