@@ -195,6 +195,7 @@ export default function Home() {
           <h2>Adventure carried forward.</h2>
           <p>Camp Firewalker was founded in 2015 in the spirit of two close friends and avid outdoorsmen, Mark E. Wood and Matthew “Firewalker” Van Eaton.</p>
           <p>Mark spent years teaching young people to camp, fish, hike, and hunt. Matt believed deeply that the outdoor experiences he loved should be shared with young people who might not otherwise have the opportunity. Their example continues in every outing.</p>
+          <Link className="memorial-story-link" href="/memorial">Read Mark and Matt&apos;s stories <span aria-hidden="true">&#8594;</span></Link>
         </div>
         <blockquote>
           <p>“Our boys ask weekly about the next camping trip.”</p>

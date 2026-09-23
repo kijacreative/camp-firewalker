@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "./CartProvider";
+import MemorialBanner from "./MemorialBanner";
+import SocialLinks from "./SocialLinks";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://campfirewalker.org";
 const title = "Camp Firewalker | Adventure. Community. Character.";
@@ -40,7 +42,8 @@ export default function RootLayout({
       <body>
         <CartProvider>
           {children}
-          <p className="site-memorial">In memory of Mark Wood and Matt Van Eaton</p>
+          <MemorialBanner />
+          <SocialLinks />
         </CartProvider>
       </body>
     </html>
